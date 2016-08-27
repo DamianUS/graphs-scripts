@@ -7,10 +7,27 @@ import matplotlib.pyplot as plt
 
 
 #Este input dir lo sacare del argumento del sh
-input_dir = "/Users/dfernandez/IdeaProjects/efficiency-cluster-scheduler-simulator/experiment_results/2016-08-26-18-13-58-vary_CL-exampleCMB_PBB_prefilled-604800"
+#input_dir = "/Users/dfernandez/IdeaProjects/efficiency-cluster-scheduler-simulator/experiment_results/2016-08-26-18-13-58-vary_CL-exampleCMB_PBB_prefilled-604800"
 #Estas filas tambien puedo sacarlas del sh, separadas por coma quiza, y el nombre del eje X va separado por ;
 #rows_string="always-power-off-decision;A,no-power-off-decision;N"
-rows_string="always-power-off-decision;A"
+#rows_string="always-power-off-decision;A"
+
+def usage():
+    print "Usage: Input 1 Dir of protobuf Input 2 string of rows to perform"
+    sys.exit(1)
+
+logging.debug("len(sys.argv): " + str(len(sys.argv)))
+
+if len(sys.argv) < 2:
+    logging.error("Not enough arguments provided.")
+    usage()
+
+try:
+    input_dir = sys.argv[1]
+    rows_string = sys.argv[2]
+
+except:
+    usage()
 policies = rows_string.split(",")
 policies_dict_name_legend = {}
 policies_single_savings = {}
@@ -112,4 +129,4 @@ plt.rc('legend',**{'fontsize':16})
 ax1.legend((firstPlot[0], fullyPlot[0]), ("First sch.", "Fully sch."))
 plt.tight_layout()
 #plt.show()
-figure.savefig('monoliticsavingsvqueue.pdf', format='PDF')
+figure.savefig(os.path.join(input_dir,'monoliticsavingsvqueue.pdf'), format='PDF')
