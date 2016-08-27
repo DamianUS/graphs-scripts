@@ -15,14 +15,15 @@ policies = rows_string.split(",")
 policies_dict_name_legend = {}
 policies_single_savings = {}
 policies_multi_savings = {}
-policies_single_kw = {}
-policies_multi_kw = {}
+policies_single_batch_think = {}
+policies_multi_batch_think = {}
+policies_single_service_think = {}
+policies_multi_service_think = {}
 
 for policy_entry in policies:
     name = policy_entry.split(';')[0]
     legend = policy_entry.split(';')[1]
     policies_dict_name_legend[name] = legend
-rows_compare_name = ["composed-off-decision:always-power-off-decision-action:default"]
 input_protobuff_monolithic_single = ""
 input_protobuff_monolithic_multi = ""
 for fn in os.listdir(input_dir):
@@ -60,8 +61,13 @@ for env in experiment_result_set_single.experiment_env:
         for policy_name in policies_dict_name_legend.keys():
         #if any(policy_name in eff.power_off_policy.name for policy_name in policies_dict_name_legend.keys()):
             if policy_name in eff.power_off_policy.name:
-                policies_single_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
-                policies_single_kw[policy_name] = eff.kwh_saved_per_shutting
+                for workload_stat in exp_result.workload_stats:
+                    policies_single_savings[policy_name] = (1 - (
+                    eff.total_energy_consumed / eff.current_energy_consumed)) * 100
+                    if workload_stat.workload_name == "Service":
+                        policies_single_service_think[policy_name] = workload_stat.job_think_times_90_percentile
+                    elif workload_stat.workload_name == "Batch":
+                        policies_single_batch_think[policy_name] = workload_stat.job_think_times_90_percentile
 
 for env in experiment_result_set_multi.experiment_env:
     for exp_result in env.experiment_result:
@@ -69,8 +75,13 @@ for env in experiment_result_set_multi.experiment_env:
         for policy_name in policies_dict_name_legend.keys():
         #if any(policy_name in eff.power_off_policy.name for policy_name in policies_dict_name_legend.keys()):
             if policy_name in eff.power_off_policy.name:
-                policies_multi_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
-                policies_multi_kw[policy_name] = eff.kwh_saved_per_shutting
+                for workload_stat in exp_result.workload_stats:
+                    policies_multi_savings[policy_name] = (1 - (
+                    eff.total_energy_consumed / eff.current_energy_consumed)) * 100
+                    if workload_stat.workload_name == "Service":
+                        policies_multi_service_think[policy_name] = workload_stat.job_think_times_90_percentile
+                    elif workload_stat.workload_name == "Batch":
+                        policies_multi_batch_think[policy_name] = workload_stat.job_think_times_90_percentile
 
 
 
@@ -81,23 +92,25 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.35
 #ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
 figure, ax1 = plt.subplots()
-savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad', zorder=1)
-savingsMultiBar = ax1.bar(ind+width, policies_multi_savings.values(), width, color='#ec6200', zorder=1)
+savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
+savingsMultiBar = ax1.bar(ind+width, policies_multi_savings.values(), width, color='#ec6200')
 
 ax1.set_ylabel('Total Savings %')
-ax1.set_ylim([10, 25])
 ax1.set_xlabel('Energy Policy')
 ax1.set_xticks(ind + width)
 policies_dict_name_legend.values()
 ax1.set_xticklabels(policies_dict_name_legend.values())
 
 ax2 = ax1.twinx()
-ax2.plot(ind+width,policies_single_kw.values(), linestyle='--', color='#18b0ea', linewidth=3, zorder=2)
-ax2.plot(ind+width,policies_multi_kw.values(),linestyle='--', color='#ffa038', linewidth=3, zorder=2)
-ax2.set_ylabel('KWh saved / shutting')
+batchPlot = ax2.plot(ind+width, policies_single_batch_think.values(), marker='^', markersize=10, linestyle='--', color='#04d8ff', linewidth=3)
+servicePlot = ax2.plot(ind+width, policies_single_service_think.values(),  marker='.', markersize=10, linestyle='-', color='#18b0ea', linewidth=3)
+
+ax2.plot(ind+width,policies_multi_batch_think.values(),linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
+ax2.plot(ind+width,policies_multi_service_think.values(),linestyle='-', marker='.', markersize=10, color='#ffa038', linewidth=3)
+ax2.set_ylabel('Job think time (s)')
 
 plt.rc('legend',**{'fontsize':16})
-ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
+ax1.legend((batchPlot[0], servicePlot[0]), ("Batch", "Service"))
 plt.tight_layout()
 #plt.show()
-figure.savefig('monoliticsavingsvskwhpershutting.pdf', format='PDF')
+figure.savefig('monoliticsavingsvjobthink.pdf', format='PDF')
