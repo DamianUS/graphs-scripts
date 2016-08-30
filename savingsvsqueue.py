@@ -94,10 +94,8 @@ for env in experiment_result_set_multi.experiment_env:
                 for workload_stat in exp_result.workload_stats:
                     if workload_stat.workload_name == "Service":
                         policies_multi_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
-                        policies_multi_service_90p_first[
-                            policy_name] = workload_stat.job_queue_time_till_first_scheduled_90_percentile
-                        policies_multi_service_90p_fully[
-                            policy_name] = workload_stat.job_queue_time_till_fully_scheduled_90_percentile
+                        policies_multi_service_90p_first[policy_name] = workload_stat.job_queue_time_till_first_scheduled_90_percentile
+                        policies_multi_service_90p_fully[policy_name] = workload_stat.job_queue_time_till_fully_scheduled_90_percentile
 
 
 
@@ -112,6 +110,7 @@ savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='
 savingsMultiBar = ax1.bar(ind+width, policies_multi_savings.values(), width, color='#ec6200')
 
 ax1.set_ylabel('Total Savings %')
+ax1.set_ylim([10, 25])
 ax1.set_xlabel('Energy Policy')
 ax1.set_xticks(ind + width)
 policies_dict_name_legend.values()

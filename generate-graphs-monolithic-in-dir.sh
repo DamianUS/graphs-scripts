@@ -39,8 +39,5 @@ if [[ ! -d $dirname ]]; then
  exit
 fi
 
-  PYTHONPATH=$PYTHONPATH:.. python ./savingsvskwh.py $1 $2
-  PYTHONPATH=$PYTHONPATH:.. python ./savingsvsjobthinktime.py $1 $2
-  PYTHONPATH=$PYTHONPATH:.. python ./savingsvsidle.py $1 $2
-  PYTHONPATH=$PYTHONPATH:.. python ./savingsvsqueue.py $1 $2
-  PYTHONPATH=$PYTHONPATH:.. python ./onMachinesComparison.py $1 $2
+  PYTHONPATH=$PYTHONPATH:.. python ./generate-graphs-all.py $1 $2
+  

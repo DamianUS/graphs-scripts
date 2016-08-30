@@ -57,10 +57,8 @@ experiment_result_set_single = cluster_simulation_protos_pb2.ExperimentResultSet
 experiment_result_set_multi = cluster_simulation_protos_pb2.ExperimentResultSet()
 
 single_infile = open(input_protobuff_monolithic_single, "rb")
-multi_infile = open(input_protobuff_monolithic_multi, "rb")
 
 experiment_result_set_single.ParseFromString(single_infile.read())
-experiment_result_set_multi.ParseFromString(multi_infile.read())
 
 print("Processing %d single path experiment envs."
               % len(experiment_result_set_single.experiment_env))
@@ -78,6 +76,10 @@ for env in experiment_result_set_single.experiment_env:
                 policies_single_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
                 policies_single_kw[policy_name] = eff.kwh_saved_per_shutting
 
+single_infile.close()
+multi_infile = open(input_protobuff_monolithic_multi, "rb")
+experiment_result_set_multi.ParseFromString(multi_infile.read())
+
 for env in experiment_result_set_multi.experiment_env:
     for exp_result in env.experiment_result:
         eff = exp_result.efficiency_stats
@@ -87,7 +89,7 @@ for env in experiment_result_set_multi.experiment_env:
                 policies_multi_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
                 policies_multi_kw[policy_name] = eff.kwh_saved_per_shutting
 
-
+multi_infile.close()
 
 N = len(policies_dict_name_legend.keys())
 figure = plt.figure(figsize=(9, 7.5))

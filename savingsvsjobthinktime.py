@@ -113,6 +113,7 @@ savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='
 savingsMultiBar = ax1.bar(ind+width, policies_multi_savings.values(), width, color='#ec6200')
 
 ax1.set_ylabel('Total Savings %')
+ax1.set_ylim([10, 25])
 ax1.set_xlabel('Energy Policy')
 ax1.set_xticks(ind + width)
 policies_dict_name_legend.values()
@@ -122,7 +123,7 @@ ax2 = ax1.twinx()
 batchPlot = ax2.plot(ind+width, policies_single_batch_think.values(), marker='^', markersize=10, linestyle='--', color='#04d8ff', linewidth=3)
 servicePlot = ax2.plot(ind+width, policies_single_service_think.values(),  marker='.', markersize=10, linestyle='-', color='#18b0ea', linewidth=3)
 
-ax2.plot(ind+width,policies_multi_batch_think.values(),linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
+ax2.plot(ind+width,policies_multi_batch_think.values(),linestyle='--', marker='^', markersize=10, color='#ff9626', linewidth=3)
 ax2.plot(ind+width,policies_multi_service_think.values(),linestyle='-', marker='.', markersize=10, color='#ffa038', linewidth=3)
 ax2.set_ylabel('Job think time (s)')
 
