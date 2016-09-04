@@ -1,9 +1,11 @@
-import sys, os, re
+import sys, os
 import logging
 import numpy as np
-from collections import defaultdict
+import collections
 import cluster_simulation_protos_pb2
 import matplotlib.pyplot as plt
+import itertools
+
 
 def usage():
     print "Usage: Input 1 Dir of protobuf Input 2 string of rows to perform"
@@ -37,6 +39,8 @@ policies_single_service_90p_first = {}
 policies_multi_service_90p_first = {}
 policies_single_service_90p_fully = {}
 policies_multi_service_90p_fully = {}
+policies_single_on_machines = {}
+policies_multi_on_machines = {}
 
 for policy_entry in policies:
     name = policy_entry.split(';')[0]
@@ -72,6 +76,11 @@ for env in experiment_result_set_single.experiment_env:
         #if any(policy_name in eff.power_off_policy.name for policy_name in policies_dict_name_legend.keys()):
             if policy_name in eff.power_off_policy.name:
                 policies_single_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
+                #measurements
+                on_machines = []
+                for measurement in exp_result.measurements:
+                    on_machines.append(measurement.machinesOn)
+                policies_single_on_machines[policy_name] = on_machines
                 #kwh
                 policies_single_kw[policy_name] = eff.kwh_saved_per_shutting
                 #idle
@@ -100,6 +109,11 @@ for env in experiment_result_set_multi.experiment_env:
         #if any(policy_name in eff.power_off_policy.name for policy_name in policies_dict_name_legend.keys()):
             if policy_name in eff.power_off_policy.name:
                 policies_multi_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
+                #measurements
+                on_machines = []
+                for measurement in exp_result.measurements:
+                    on_machines.append(measurement.machinesOn)
+                policies_multi_on_machines[policy_name] = on_machines
                 #kwh
                 policies_multi_kw[policy_name] = eff.kwh_saved_per_shutting
                 #idle
@@ -114,6 +128,24 @@ for env in experiment_result_set_multi.experiment_env:
                     elif workload_stat.workload_name == "Batch":
                         policies_multi_batch_think[policy_name] = workload_stat.job_think_times_90_percentile
 
+
+policies_dict_name_legend = collections.OrderedDict(sorted(policies_dict_name_legend.items()))
+policies_single_savings = collections.OrderedDict(sorted(policies_single_savings.items()))
+policies_multi_savings = collections.OrderedDict(sorted(policies_multi_savings.items()))
+policies_single_batch_think = collections.OrderedDict(sorted(policies_single_batch_think.items()))
+policies_multi_batch_think = collections.OrderedDict(sorted(policies_multi_batch_think.items()))
+policies_single_service_think = collections.OrderedDict(sorted(policies_single_service_think.items()))
+policies_multi_service_think = collections.OrderedDict(sorted(policies_multi_service_think.items()))
+policies_single_kw = collections.OrderedDict(sorted(policies_single_kw.items()))
+policies_multi_kw = collections.OrderedDict(sorted(policies_multi_kw.items()))
+policies_single_idle = collections.OrderedDict(sorted(policies_single_idle.items()))
+policies_multi_idle = collections.OrderedDict(sorted(policies_multi_idle.items()))
+policies_single_service_90p_first = collections.OrderedDict(sorted(policies_single_service_90p_first.items()))
+policies_multi_service_90p_first = collections.OrderedDict(sorted(policies_multi_service_90p_first.items()))
+policies_single_service_90p_fully = collections.OrderedDict(sorted(policies_single_service_90p_fully.items()))
+policies_multi_service_90p_fully = collections.OrderedDict(sorted(policies_multi_service_90p_fully.items()))
+policies_single_on_machines = collections.OrderedDict(sorted(policies_single_on_machines.items()))
+policies_multi_on_machines = collections.OrderedDict(sorted(policies_multi_on_machines.items()))
 #kwh
 
 N = len(policies_dict_name_legend.keys())
@@ -239,3 +271,73 @@ ax1.legend((batchPlot[0], servicePlot[0]), ("Batch", "Service"))
 plt.tight_layout()
 #plt.show()
 figure.savefig(os.path.join(input_dir,'monoliticsavingsvjobthink.pdf'), format='PDF')
+
+
+
+
+
+#Measurements
+
+N = len(policies_dict_name_legend.keys())
+figure = plt.figure(figsize=(18, 15))
+plt.rcParams.update({'font.size': 25})
+#ind = np.arange(N)  # the x locations for the groups
+#width = 0.35
+#ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
+figure, ax1 = plt.subplots()
+plt.locator_params(axis='x', nbins=7)
+ax2.set_xticklabels(['1', '2', '3', '4', '5', '6', '7'])
+ax1.set_ylabel('On machines %')
+ax1.set_xlabel('Day')
+#ax1.set_xticklabels(policies_dict_name_legend.values())
+
+marker = itertools.cycle((',', '+', '.', 'o', '*'))
+color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
+linestyle = itertools.cycle((':', '-.', '--', '-'))
+for key, value in policies_single_on_machines.iteritems():
+    #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
+    ax1.plot(value, linestyle=linestyle.next(), marker=marker.next(), markersize=2, linewidth=1,label=policies_dict_name_legend.get(key))
+
+
+#plt.rc('legend',**{'fontsize':16})
+#ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
+ax1.set_ylim([0.60, 0.75])
+ax1.legend()
+plt.tight_layout()
+#plt.show()
+figure.savefig(os.path.join(input_dir,'monoliticsonevolutionsingle.pdf'), format='PDF')
+
+
+
+#Empieza el multi
+
+
+
+N = len(policies_dict_name_legend.keys())
+figure = plt.figure(figsize=(18, 15))
+plt.rcParams.update({'font.size': 25})
+#ind = np.arange(N)  # the x locations for the groups
+#width = 0.35
+#ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
+figure, ax1 = plt.subplots()
+plt.locator_params(axis='x', nbins=7)
+ax2.set_xticklabels(['1', '2', '3', '4', '5', '6', '7'])
+ax1.set_ylabel('On machines %')
+ax1.set_xlabel('Day')
+#ax1.set_xticklabels(policies_dict_name_legend.values())
+
+marker = itertools.cycle((',', '+', '.', 'o', '*'))
+color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
+linestyle = itertools.cycle((':', '-.', '--', '-'))
+for key, value in policies_multi_on_machines.iteritems():
+    #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
+    ax1.plot(value, linestyle=linestyle.next(), marker=marker.next(), markersize=2, linewidth=1,label=policies_dict_name_legend.get(key))
+
+
+#plt.rc('legend',**{'fontsize':16})
+#ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
+ax1.set_ylim([0.60, 0.75])
+ax1.legend()
+plt.tight_layout()
+#plt.show()
+figure.savefig(os.path.join(input_dir,'monoliticsonevolutionmulti.pdf'), format='PDF')
