@@ -324,14 +324,13 @@ linestyle = itertools.cycle((':', '-.', '--', '-'))
 for key, value in policies_single_on_machines.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), linewidth=2, label=policies_dict_name_legend.get(key))
-
 plt.xticks([0, ((runtime/tickfrequency)/7)*1, ((runtime/tickfrequency)/7)*2, ((runtime/tickfrequency)/7)*3, ((runtime/tickfrequency)/7)*4, ((runtime/tickfrequency)/7)*5, ((runtime/tickfrequency)/7)*6, ((runtime/tickfrequency)/7)*7], ['0', '1', '2', '3', '4', '5', '6', '7'])
 plt.ylim([0.60, 0.75])
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           ncol=7, mode="expand", borderaxespad=0.)
 #plt.tight_layout()
-#plt.show()
-figure.savefig(os.path.join(input_dir,'monoliticsonevolutiosingle.pdf'), format='PDF')
+plt.show()
+#figure.savefig(os.path.join(input_dir,'monoliticsonevolutiosingle.pdf'), format='PDF')
 
 
 
