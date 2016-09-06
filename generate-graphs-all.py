@@ -309,23 +309,14 @@ figure.savefig(os.path.join(input_dir,'monoliticsavingsvjobthink.pdf'), format='
 # #plt.show()
 # figure.savefig(os.path.join(input_dir,'monoliticsonevolutionsingle.pdf'), format='PDF')
 
-
+runtime=604800
+tickfrequency=15
 
 N = len(policies_dict_name_legend.keys())
 figure = plt.figure(figsize=(11, 8))
 plt.rcParams.update({'font.size': 25})
-#ind = np.arange(N)  # the x locations for the groups
-#width = 0.35
-#ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
-#figure, ax1 = plt.subplots()
-
-#plt.adjustable("datalim")
-#plt.locator_params(axis='x', nbins=7)
-#plt.xticks([0, 1, 2, 3, 4, 5, 6])
-#plt.xlim(0, 7)
 plt.ylabel('On machines %')
-plt.xlabel('# Measurements (15s)')
-#ax1.set_xticklabels(policies_dict_name_legend.values())
+plt.xlabel('# Days')
 
 marker = itertools.cycle((',', '+', '.', 'o', '*'))
 color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
@@ -334,19 +325,7 @@ for key, value in policies_single_on_machines.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), linewidth=2, label=policies_dict_name_legend.get(key))
 
-
-#plt.rc('legend',**{'fontsize':16})
-#ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
-
-# set the locations of the xticks
-#plt.xticks(np.arange(min(x), max(x)+1, 1.0))
-#plt.xticks( np.arange(6), ('Tom', 'Dick', 'Harry', 'Sally', 'Sue') )
-#plt.locator_params(axis='x', nbins=8)
-#ax = plt.gca()
-#ax.axes.get_xaxis().set_ticklabels(['0', '1', '2', '3', '4', '5', '6'])
-#plt.xtickslabels(['0', '1', '2', '3', '4', '5', '6'])
-# set the locations and labels of the xticks
-#plt.xticks(np.arange(5), ('Tom', 'Dick', 'Harry', 'Sally', 'Sue'))
+plt.xticks([0, ((runtime/tickfrequency)/7)*1, ((runtime/tickfrequency)/7)*2, ((runtime/tickfrequency)/7)*3, ((runtime/tickfrequency)/7)*4, ((runtime/tickfrequency)/7)*5, ((runtime/tickfrequency)/7)*6, ((runtime/tickfrequency)/7)*7], ['0', '1', '2', '3', '4', '5', '6', '7'])
 plt.ylim([0.60, 0.75])
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           ncol=7, mode="expand", borderaxespad=0.)
@@ -363,19 +342,8 @@ figure.savefig(os.path.join(input_dir,'monoliticsonevolutiosingle.pdf'), format=
 N = len(policies_dict_name_legend.keys())
 figure = plt.figure(figsize=(11, 8))
 plt.rcParams.update({'font.size': 25})
-#ind = np.arange(N)  # the x locations for the groups
-#width = 0.35
-#ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
-#figure, ax1 = plt.subplots()
-
-#plt.adjustable("datalim")
-#plt.locator_params(axis='x', nbins=7)
-#plt.xticks([0, 1, 2, 3, 4, 5, 6])
-#plt.xlim(0, 7)
 plt.ylabel('On machines %')
-plt.xlabel('# Measurements (15s)')
-#ax1.set_xticklabels(policies_dict_name_legend.values())
-
+plt.xlabel('# Day')
 marker = itertools.cycle((',', '+', '.', 'o', '*'))
 color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
 linestyle = itertools.cycle((':', '-.', '--', '-'))
@@ -383,19 +351,7 @@ for key, value in policies_multi_on_machines.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), linewidth=2, label=policies_dict_name_legend.get(key))
 
-
-#plt.rc('legend',**{'fontsize':16})
-#ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
-
-# set the locations of the xticks
-#plt.xticks(np.arange(min(x), max(x)+1, 1.0))
-#plt.xticks( np.arange(6), ('Tom', 'Dick', 'Harry', 'Sally', 'Sue') )
-#plt.locator_params(axis='x', nbins=8)
-#ax = plt.gca()
-#ax.axes.get_xaxis().set_ticklabels(['0', '1', '2', '3', '4', '5', '6'])
-#plt.xtickslabels(['0', '1', '2', '3', '4', '5', '6'])
-# set the locations and labels of the xticks
-#plt.xticks(np.arange(5), ('Tom', 'Dick', 'Harry', 'Sally', 'Sue'))
+plt.xticks([0, ((runtime/tickfrequency)/7)*1, ((runtime/tickfrequency)/7)*2, ((runtime/tickfrequency)/7)*3, ((runtime/tickfrequency)/7)*4, ((runtime/tickfrequency)/7)*5, ((runtime/tickfrequency)/7)*6, ((runtime/tickfrequency)/7)*7], ['0', '1', '2', '3', '4', '5', '6', '7'])
 plt.ylim([0.60, 0.75])
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           ncol=7, mode="expand", borderaxespad=0.)
