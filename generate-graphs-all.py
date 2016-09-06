@@ -324,7 +324,7 @@ plt.rcParams.update({'font.size': 25})
 #plt.xticks([0, 1, 2, 3, 4, 5, 6])
 #plt.xlim(0, 7)
 plt.ylabel('On machines %')
-plt.xlabel('Day')
+plt.xlabel('# Measurements (15s)')
 #ax1.set_xticklabels(policies_dict_name_legend.values())
 
 marker = itertools.cycle((',', '+', '.', 'o', '*'))
@@ -341,9 +341,9 @@ for key, value in policies_single_on_machines.iteritems():
 # set the locations of the xticks
 #plt.xticks(np.arange(min(x), max(x)+1, 1.0))
 #plt.xticks( np.arange(6), ('Tom', 'Dick', 'Harry', 'Sally', 'Sue') )
-plt.locator_params(axis='x', nbins=8)
-ax = plt.gca()
-ax.axes.get_xaxis().set_ticklabels(['0', '1', '2', '3', '4', '5', '6'])
+#plt.locator_params(axis='x', nbins=8)
+#ax = plt.gca()
+#ax.axes.get_xaxis().set_ticklabels(['0', '1', '2', '3', '4', '5', '6'])
 #plt.xtickslabels(['0', '1', '2', '3', '4', '5', '6'])
 # set the locations and labels of the xticks
 #plt.xticks(np.arange(5), ('Tom', 'Dick', 'Harry', 'Sally', 'Sue'))
@@ -373,7 +373,7 @@ plt.rcParams.update({'font.size': 25})
 #plt.xticks([0, 1, 2, 3, 4, 5, 6])
 #plt.xlim(0, 7)
 plt.ylabel('On machines %')
-plt.xlabel('Day')
+plt.xlabel('# Measurements (15s)')
 #ax1.set_xticklabels(policies_dict_name_legend.values())
 
 marker = itertools.cycle((',', '+', '.', 'o', '*'))
@@ -390,9 +390,9 @@ for key, value in policies_multi_on_machines.iteritems():
 # set the locations of the xticks
 #plt.xticks(np.arange(min(x), max(x)+1, 1.0))
 #plt.xticks( np.arange(6), ('Tom', 'Dick', 'Harry', 'Sally', 'Sue') )
-plt.locator_params(axis='x', nbins=8)
-ax = plt.gca()
-ax.axes.get_xaxis().set_ticklabels(['0', '1', '2', '3', '4', '5', '6'])
+#plt.locator_params(axis='x', nbins=8)
+#ax = plt.gca()
+#ax.axes.get_xaxis().set_ticklabels(['0', '1', '2', '3', '4', '5', '6'])
 #plt.xtickslabels(['0', '1', '2', '3', '4', '5', '6'])
 # set the locations and labels of the xticks
 #plt.xticks(np.arange(5), ('Tom', 'Dick', 'Harry', 'Sally', 'Sue'))
