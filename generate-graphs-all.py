@@ -79,8 +79,9 @@ for env in experiment_result_set_single.experiment_env:
                 policies_single_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
                 #measurements
                 on_machines = []
-                for measurement in exp_result.measurements:
-                    on_machines.append(measurement.machinesOn)
+                for index, measurement in enumerate(exp_result.measurements):
+                    if index < len(exp_result.measurements) - 500:
+                        on_machines.append(measurement.machinesOn)
                 policies_single_on_machines[policy_name] = on_machines
                 #kwh
                 policies_single_kw[policy_name] = eff.kwh_saved_per_shutting
@@ -112,8 +113,9 @@ for env in experiment_result_set_multi.experiment_env:
                 policies_multi_savings[policy_name] = (1 - (eff.total_energy_consumed / eff.current_energy_consumed)) * 100
                 #measurements
                 on_machines = []
-                for measurement in exp_result.measurements:
-                    on_machines.append(measurement.machinesOn)
+                for index, measurement in enumerate(exp_result.measurements):
+                    if index < len(exp_result.measurements)-500:
+                        on_machines.append(measurement.machinesOn)
                 policies_multi_on_machines[policy_name] = on_machines
                 #kwh
                 policies_multi_kw[policy_name] = eff.kwh_saved_per_shutting
@@ -326,7 +328,7 @@ linestyle = itertools.cycle((':', '-.', '--', '-'))
 for key, value in policies_single_on_machines.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), linewidth=2, label=policies_dict_name_legend.get(key))
-plt.xticks([0, math.ceil(((runtime/tickfrequency)/numberDays)*1.0), math.ceil(((runtime/tickfrequency)/numberDays)*2.0), math.ceil(((runtime/tickfrequency)/numberDays)*3.0), math.ceil(((runtime/tickfrequency)/numberDays)*4.0), math.ceil(((runtime/tickfrequency)/numberDays)*5.0), math.ceil(((runtime/tickfrequency)/numberDays)*6.0), math.ceil(((runtime/tickfrequency)/numberDays)*7.0)], ['0', '1', '2', '3', '4', '5', '6', '7'])
+plt.xticks([0, ceil(((runtime/tickfrequency)/numberDays)*1.0), ceil(((runtime/tickfrequency)/numberDays)*2.0), ceil(((runtime/tickfrequency)/numberDays)*3.0), ceil(((runtime/tickfrequency)/numberDays)*4.0), ceil(((runtime/tickfrequency)/numberDays)*5.0), ceil(((runtime/tickfrequency)/numberDays)*6.0), ceil(((runtime/tickfrequency)/numberDays)*7.0)], ['0', '1', '2', '3', '4', '5', '6', '7'])
 plt.ylim([0.60, 0.75])
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           ncol=7, mode="expand", borderaxespad=0.)
@@ -352,7 +354,7 @@ for key, value in policies_multi_on_machines.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), linewidth=2, label=policies_dict_name_legend.get(key))
 
-plt.xticks([0, math.ceil(((runtime/tickfrequency)/numberDays)*1.0), math.ceil(((runtime/tickfrequency)/numberDays)*2.0), math.ceil(((runtime/tickfrequency)/numberDays)*3.0), math.ceil(((runtime/tickfrequency)/numberDays)*4.0), math.ceil(((runtime/tickfrequency)/numberDays)*5.0), math.ceil(((runtime/tickfrequency)/numberDays)*6.0), math.ceil(((runtime/tickfrequency)/numberDays)*7.0)], ['0', '1', '2', '3', '4', '5', '6', '7'])
+plt.xticks([0, ceil(((runtime/tickfrequency)/numberDays)*1.0), (((runtime/tickfrequency)/numberDays)*2.0), ceil(((runtime/tickfrequency)/numberDays)*3.0), ceil(((runtime/tickfrequency)/numberDays)*4.0), ceil(((runtime/tickfrequency)/numberDays)*5.0), ceil(((runtime/tickfrequency)/numberDays)*6.0), ceil(((runtime/tickfrequency)/numberDays)*7.0)], ['0', '1', '2', '3', '4', '5', '6', '7'])
 plt.ylim([0.60, 0.75])
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           ncol=7, mode="expand", borderaxespad=0.)
