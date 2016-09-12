@@ -5,6 +5,7 @@ import collections
 import cluster_simulation_protos_pb2
 import matplotlib.pyplot as plt
 import itertools
+from math import *
 
 
 def usage():
@@ -309,8 +310,9 @@ figure.savefig(os.path.join(input_dir,'monoliticsavingsvjobthink.pdf'), format='
 # #plt.show()
 # figure.savefig(os.path.join(input_dir,'monoliticsonevolutionsingle.pdf'), format='PDF')
 
-runtime=604800
-tickfrequency=15
+runtime=604800.0
+tickfrequency=15.0
+numberDays=7.0
 
 N = len(policies_dict_name_legend.keys())
 figure = plt.figure(figsize=(11, 8))
@@ -324,7 +326,7 @@ linestyle = itertools.cycle((':', '-.', '--', '-'))
 for key, value in policies_single_on_machines.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), linewidth=2, label=policies_dict_name_legend.get(key))
-plt.xticks([0, ((runtime/tickfrequency)/7)*1, ((runtime/tickfrequency)/7)*2, ((runtime/tickfrequency)/7)*3, ((runtime/tickfrequency)/7)*4, ((runtime/tickfrequency)/7)*5, ((runtime/tickfrequency)/7)*6, ((runtime/tickfrequency)/7)*7], ['0', '1', '2', '3', '4', '5', '6', '7'])
+plt.xticks([0, math.ceil(((runtime/tickfrequency)/numberDays)*1.0), math.ceil(((runtime/tickfrequency)/numberDays)*2.0), math.ceil(((runtime/tickfrequency)/numberDays)*3.0), math.ceil(((runtime/tickfrequency)/numberDays)*4.0), math.ceil(((runtime/tickfrequency)/numberDays)*5.0), math.ceil(((runtime/tickfrequency)/numberDays)*6.0), math.ceil(((runtime/tickfrequency)/numberDays)*7.0)], ['0', '1', '2', '3', '4', '5', '6', '7'])
 plt.ylim([0.60, 0.75])
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           ncol=7, mode="expand", borderaxespad=0.)
@@ -350,7 +352,7 @@ for key, value in policies_multi_on_machines.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), linewidth=2, label=policies_dict_name_legend.get(key))
 
-plt.xticks([0, ((runtime/tickfrequency)/7)*1, ((runtime/tickfrequency)/7)*2, ((runtime/tickfrequency)/7)*3, ((runtime/tickfrequency)/7)*4, ((runtime/tickfrequency)/7)*5, ((runtime/tickfrequency)/7)*6, ((runtime/tickfrequency)/7)*7], ['0', '1', '2', '3', '4', '5', '6', '7'])
+plt.xticks([0, math.ceil(((runtime/tickfrequency)/numberDays)*1.0), math.ceil(((runtime/tickfrequency)/numberDays)*2.0), math.ceil(((runtime/tickfrequency)/numberDays)*3.0), math.ceil(((runtime/tickfrequency)/numberDays)*4.0), math.ceil(((runtime/tickfrequency)/numberDays)*5.0), math.ceil(((runtime/tickfrequency)/numberDays)*6.0), math.ceil(((runtime/tickfrequency)/numberDays)*7.0)], ['0', '1', '2', '3', '4', '5', '6', '7'])
 plt.ylim([0.60, 0.75])
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           ncol=7, mode="expand", borderaxespad=0.)
