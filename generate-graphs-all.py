@@ -329,8 +329,8 @@ plt.ylim([0.60, 0.75])
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           ncol=7, mode="expand", borderaxespad=0.)
 #plt.tight_layout()
-plt.show()
-#figure.savefig(os.path.join(input_dir,'monoliticsonevolutiosingle.pdf'), format='PDF')
+#plt.show()
+figure.savefig(os.path.join(input_dir,'monoliticsonevolutiosingle.pdf'), format='PDF')
 
 
 
