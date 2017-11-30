@@ -115,10 +115,11 @@ policies_dict_name_legend.values()
 ax1.set_xticklabels(policies_dict_name_legend.values())
 
 ax2 = ax1.twinx()
-ax2.plot(ind+width,policies_single_kw.values(), linestyle='--', color='#ec6200', linewidth=3, zorder=2)
-ax2.set_ylabel('KWh saved / shutting')
+kwPlot = ax2.plot(ind+width/2,policies_single_kw.values(), linestyle='--', color='#ec6200', linewidth=3, zorder=2, label="kWh/shut")
+ax2.set_ylabel('KWh saved / shut-down')
 
 plt.rc('legend',**{'fontsize':16})
+legend = ax2.legend(loc='upper right')
 plt.tight_layout()
 #plt.show()
 figure.savefig(os.path.join(input_dir,'monoliticsavingsvskwhpershutting.pdf'), format='PDF')
@@ -132,7 +133,8 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.7
 #ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
 figure, ax1 = plt.subplots()
-savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
+#savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
+savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad', zorder=1)
 
 ax1.set_ylabel('Total Savings %')
 ax1.set_ylim([10, 25])
@@ -142,10 +144,11 @@ policies_dict_name_legend.values()
 ax1.set_xticklabels(policies_dict_name_legend.values())
 
 ax2 = ax1.twinx()
-ax2.plot(ind+width,policies_single_idle.values(), linestyle='--', color='#ec6200', linewidth=3)
+idlePlot = ax2.plot(ind+width/2,policies_single_idle.values(), linestyle='--', color='#ec6200', linewidth=3, label="Idle %")
 ax2.set_ylabel('Idle Resources %')
 
 plt.rc('legend',**{'fontsize':16})
+ax2.legend(loc='upper left')
 plt.tight_layout()
 #plt.show()
 figure.savefig(os.path.join(input_dir,'monoliticsavingsvsidle.pdf'), format='PDF')
@@ -159,7 +162,8 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.7
 #ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
 figure, ax1 = plt.subplots()
-savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
+#savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
+savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad', zorder=1)
 
 ax1.set_ylabel('Total Savings %')
 ax1.set_ylim([10, 25])
@@ -169,8 +173,8 @@ policies_dict_name_legend.values()
 ax1.set_xticklabels(policies_dict_name_legend.values())
 
 ax2 = ax1.twinx()
-firstPlot = ax2.plot(ind+width, policies_single_service_90p_first.values(),  marker='.', markersize=10, linestyle='-', color='#ec2700', linewidth=3)
-fullyPlot = ax2.plot(ind+width, policies_single_service_90p_fully.values(), marker='^', markersize=10, linestyle='--', color='#2daf08', linewidth=3)
+firstPlot = ax2.plot(ind+width/2, policies_single_service_90p_first.values(),  marker='.', markersize=10, linestyle='-', color='#ec2700', linewidth=3)
+fullyPlot = ax2.plot(ind+width/2, policies_single_service_90p_fully.values(), marker='^', markersize=10, linestyle='--', color='#2daf08', linewidth=3)
 
 ax2.set_ylabel('Job queue times (s)')
 
@@ -189,7 +193,8 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.7
 #ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
 figure, ax1 = plt.subplots()
-savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
+#savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
+savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad', zorder=1)
 
 ax1.set_ylabel('Total Savings %')
 ax1.set_ylim([10, 25])
@@ -199,9 +204,9 @@ policies_dict_name_legend.values()
 ax1.set_xticklabels(policies_dict_name_legend.values())
 
 ax2 = ax1.twinx()
-batchPlot = ax2.plot(ind+width, policies_single_batch_think.values(), marker='^', markersize=10, linestyle='--', color='#ec2700', linewidth=3)
-servicePlot = ax2.plot(ind+width, policies_single_service_think.values(),  marker='.', markersize=10, linestyle='-', color='#2daf08', linewidth=3)
-
+batchPlot = ax2.plot(ind+width/2, policies_single_batch_think.values(), marker='^', markersize=10, linestyle='--', color='#ec2700', linewidth=3)
+servicePlot = ax2.plot(ind+width/2, policies_single_service_think.values(),  marker='.', markersize=10, linestyle='-', color='#2daf08', linewidth=3)
+ax2.set_ylim(1.0, 4.0)
 ax2.set_ylabel('Job think time (s)')
 
 plt.rc('legend',**{'fontsize':16})
