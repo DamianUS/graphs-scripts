@@ -42,6 +42,8 @@ policies_single_service_90p_fully = {}
 policies_multi_service_90p_fully = {}
 policies_single_on_machines = {}
 policies_multi_on_machines = {}
+policies_single_epochs = {}
+policies_multi_epochs = {}
 
 for policy_entry in policies:
     name = policy_entry.split(';')[0]
@@ -97,7 +99,12 @@ for env in experiment_result_set_single.experiment_env:
                         #job think time
                         policies_single_service_think[policy_name] = workload_stat.job_think_times_90_percentile
                     elif workload_stat.workload_name == "Batch":
-                            policies_single_batch_think[policy_name] = workload_stat.job_think_times_90_percentile
+                        policies_single_batch_think[policy_name] = workload_stat.job_think_times_90_percentile
+                        epochs = []
+                        for epoch in workload_stat.epochs:
+                            epochs.append(epoch.fintess_avg)
+                            policies_single_epochs[policy_name] = epochs
+
 
 print("Empieza a leer multi")
 multi_infile = open(input_protobuff_monolithic_multi, "rb")
@@ -131,7 +138,10 @@ for env in experiment_result_set_multi.experiment_env:
                         policies_multi_service_think[policy_name] = workload_stat.job_think_times_90_percentile
                     elif workload_stat.workload_name == "Batch":
                         policies_multi_batch_think[policy_name] = workload_stat.job_think_times_90_percentile
-
+                        epochs = []
+                        for epoch in workload_stat.epochs:
+                            epochs.append(epoch.fintess_avg)
+                            policies_multi_epochs[policy_name] = epochs
 
 policies_dict_name_legend = collections.OrderedDict(sorted(policies_dict_name_legend.items()))
 policies_single_savings = collections.OrderedDict(sorted(policies_single_savings.items()))
@@ -150,219 +160,54 @@ policies_single_service_90p_fully = collections.OrderedDict(sorted(policies_sing
 policies_multi_service_90p_fully = collections.OrderedDict(sorted(policies_multi_service_90p_fully.items()))
 policies_single_on_machines = collections.OrderedDict(sorted(policies_single_on_machines.items()))
 policies_multi_on_machines = collections.OrderedDict(sorted(policies_multi_on_machines.items()))
+policies_single_epochs = collections.OrderedDict(sorted(policies_single_epochs.items()))
+policies_multi_epochs = collections.OrderedDict(sorted(policies_multi_epochs.items()))
 #kwh
 
-N = len(policies_dict_name_legend.keys())
-figure = plt.figure(figsize=(9, 7.5))
-plt.rcParams.update({'font.size': 25})
-ind = np.arange(N)  # the x locations for the groups
-width = 0.35
-#ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
-figure, ax1 = plt.subplots()
-savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad', zorder=1)
-savingsMultiBar = ax1.bar(ind+width, policies_multi_savings.values(), width, color='#ec6200', zorder=1)
-
-ax1.set_ylabel('Total Savings %')
-ax1.set_ylim([30, 50])
-ax1.set_xlabel('Energy Policy')
-ax1.set_xticks(ind + width)
-policies_dict_name_legend.values()
-ax1.set_xticklabels(policies_dict_name_legend.values())
-
-ax2 = ax1.twinx()
-ax2.plot(ind+width,policies_single_kw.values(), linestyle='--', color='#18b0ea', linewidth=3, zorder=2)
-ax2.plot(ind+width,policies_multi_kw.values(),linestyle='--', color='#ffa038', linewidth=3, zorder=2)
-ax2.set_ylabel('KWh saved / shutting')
-
-plt.rc('legend',**{'fontsize':16})
-ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
-plt.tight_layout()
-#plt.show()
-figure.savefig(os.path.join(input_dir,'monoliticsavingsvskwhpershutting.pdf'), format='PDF')
-
-#idle
-
-N = len(policies_dict_name_legend.keys())
-figure = plt.figure(figsize=(9, 7.5))
-plt.rcParams.update({'font.size': 25})
-ind = np.arange(N)  # the x locations for the groups
-width = 0.35
-#ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
-figure, ax1 = plt.subplots()
-savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
-savingsMultiBar = ax1.bar(ind+width, policies_multi_savings.values(), width, color='#ec6200')
-
-ax1.set_ylabel('Total Savings %')
-ax1.set_ylim([30, 50])
-ax1.set_xlabel('Energy Policy')
-ax1.set_xticks(ind + width)
-policies_dict_name_legend.values()
-ax1.set_xticklabels(policies_dict_name_legend.values())
-
-ax2 = ax1.twinx()
-ax2.plot(ind+width,policies_single_idle.values(), linestyle='--', color='#18b0ea', linewidth=3)
-ax2.plot(ind+width,policies_multi_idle.values(),linestyle='--', color='#ffa038', linewidth=3)
-ax2.set_ylabel('Idle Resources %')
-
-plt.rc('legend',**{'fontsize':16})
-ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
-plt.tight_layout()
-#plt.show()
-figure.savefig(os.path.join(input_dir,'monoliticsavingsvsidle.pdf'), format='PDF')
-
-#queuetimes
-
-N = len(policies_dict_name_legend.keys())
-figure = plt.figure(figsize=(9, 7.5))
-plt.rcParams.update({'font.size': 25})
-ind = np.arange(N)  # the x locations for the groups
-width = 0.35
-#ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
-figure, ax1 = plt.subplots()
-savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
-savingsMultiBar = ax1.bar(ind+width, policies_multi_savings.values(), width, color='#ec6200')
-
-ax1.set_ylabel('Total Savings %')
-ax1.set_ylim([30, 50])
-ax1.set_xlabel('Energy Policy')
-ax1.set_xticks(ind + width)
-policies_dict_name_legend.values()
-ax1.set_xticklabels(policies_dict_name_legend.values())
-
-ax2 = ax1.twinx()
-firstPlot = ax2.plot(ind+width, policies_single_service_90p_first.values(),  marker='.', markersize=10, linestyle='-', color='#18b0ea', linewidth=3)
-fullyPlot = ax2.plot(ind+width, policies_single_service_90p_fully.values(), marker='^', markersize=10, linestyle='--', color='#04d8ff', linewidth=3)
-
-ax2.plot(ind+width,policies_multi_service_90p_first.values(),linestyle='-', marker='.', markersize=10, color='#ffa038', linewidth=3)
-ax2.plot(ind+width,policies_multi_service_90p_fully.values(),linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
-ax2.set_ylabel('Job queue times (s)')
-
-plt.rc('legend',**{'fontsize':16})
-ax1.legend((firstPlot[0], fullyPlot[0]), ("First sch.", "Fully sch."))
-plt.tight_layout()
-#plt.show()
-figure.savefig(os.path.join(input_dir,'monoliticsavingsvqueue.pdf'), format='PDF')
-
-#job think
-
-N = len(policies_dict_name_legend.keys())
-figure = plt.figure(figsize=(9, 7.5))
-plt.rcParams.update({'font.size': 25})
-ind = np.arange(N)  # the x locations for the groups
-width = 0.35
-#ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
-figure, ax1 = plt.subplots()
-savingsSingleBar = ax1.bar(ind, policies_single_savings.values(), width, color='#007dad')
-savingsMultiBar = ax1.bar(ind+width, policies_multi_savings.values(), width, color='#ec6200')
-
-ax1.set_ylabel('Total Savings %')
-ax1.set_ylim([30, 50])
-ax1.set_xlabel('Energy Policy')
-ax1.set_xticks(ind + width)
-policies_dict_name_legend.values()
-ax1.set_xticklabels(policies_dict_name_legend.values())
-
-ax2 = ax1.twinx()
-batchPlot = ax2.plot(ind+width, policies_single_batch_think.values(), marker='^', markersize=10, linestyle='--', color='#04d8ff', linewidth=3)
-servicePlot = ax2.plot(ind+width, policies_single_service_think.values(),  marker='.', markersize=10, linestyle='-', color='#18b0ea', linewidth=3)
-
-ax2.plot(ind+width,policies_multi_batch_think.values(),linestyle='--', marker='^', markersize=10, color='#ff9626', linewidth=3)
-ax2.plot(ind+width,policies_multi_service_think.values(),linestyle='-', marker='.', markersize=10, color='#ffa038', linewidth=3)
-ax2.set_ylabel('Job think time (s)')
-
-plt.rc('legend',**{'fontsize':16})
-ax1.legend((batchPlot[0], servicePlot[0]), ("Batch", "Service"))
-plt.tight_layout()
-#plt.show()
-figure.savefig(os.path.join(input_dir,'monoliticsavingsvjobthink.pdf'), format='PDF')
 
 
 
-
-
-#Measurements
-#
-# N = len(policies_dict_name_legend.keys())
-# figure = plt.figure(figsize=(35, 20))
-# plt.rcParams.update({'font.size': 25})
-# #ind = np.arange(N)  # the x locations for the groups
-# #width = 0.35
-# #ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
-# figure, ax1 = plt.subplots()
-# ax1.set_adjustable("datalim")
-# plt.locator_params(axis='x', nbins=8)
-# ax1.set_xticklabels(['0', '1', '2', '3', '4', '5', '6'])
-# ax1.set_ylabel('On machines %')
-# ax1.set_xlabel('Day')
-# #ax1.set_xticklabels(policies_dict_name_legend.values())
-#
-# marker = itertools.cycle((',', '+', '.', 'o', '*'))
-# color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
-# linestyle = itertools.cycle((':', '-.', '--', '-'))
-# for key, value in policies_single_on_machines.iteritems():
-#     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
-#     ax1.plot(value, linestyle=linestyle.next(), linewidth=1, label=policies_dict_name_legend.get(key))
-#
-#
-# #plt.rc('legend',**{'fontsize':16})
-# #ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
-# ax1.set_ylim([0.60, 0.75])
-# plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-#            ncol=7, mode="expand", borderaxespad=0.)
-# plt.tight_layout()
-# #plt.show()
-# figure.savefig(os.path.join(input_dir,'monoliticsonevolutionsingle.pdf'), format='PDF')
-
-runtime=604800.0
-tickfrequency=15.0
-numberDays=7.0
-
-N = len(policies_dict_name_legend.keys())
+N = len(policies_single_epochs.keys())
 figure = plt.figure(figsize=(11, 8))
 plt.rcParams.update({'font.size': 25})
-plt.ylabel('On machines %')
-plt.xlabel('# Days')
+plt.ylabel('Job energy consumption (kWh)')
+plt.xlabel('# Epoch')
 
-#marker = itertools.cycle((',', '+', '.', 'o', '*'))
-#color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
+marker = itertools.cycle((',', '+', '.', 'o', '*'))
+color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
 #linestyle = itertools.cycle((':', '-.', '--', '-'))
 color = itertools.cycle('k')
-linestyle = itertools.cycle('-')
-for key, value in policies_single_on_machines.iteritems():
+linestyle = itertools.cycle('--')
+for key, value in policies_single_epochs.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), color='k', linewidth=2, label=policies_dict_name_legend.get(key))
-plt.xticks([0, ceil(((runtime/tickfrequency)/numberDays)*1.0), ceil(((runtime/tickfrequency)/numberDays)*2.0), ceil(((runtime/tickfrequency)/numberDays)*3.0), ceil(((runtime/tickfrequency)/numberDays)*4.0), ceil(((runtime/tickfrequency)/numberDays)*5.0), ceil(((runtime/tickfrequency)/numberDays)*6.0), ceil(((runtime/tickfrequency)/numberDays)*7.0)], ['0', '1', '2', '3', '4', '5', '6', '7'])
-plt.ylim([0.28, 0.61])
 #plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
           #ncol=7, mode="expand", borderaxespad=0.)
 #plt.tight_layout()
 #plt.show()
-figure.savefig(os.path.join(input_dir,'monoliticsonevolutiosingle.pdf'), format='PDF')
+figure.savefig(os.path.join(input_dir,'monoliticfitnessevolutiosingle.pdf'), format='PDF')
 
 
 
 #Empieza el multi
-
-
-
-N = len(policies_dict_name_legend.keys())
+#
+#
+#
+N = len(policies_single_epochs.keys())
 figure = plt.figure(figsize=(11, 8))
 plt.rcParams.update({'font.size': 25})
-plt.ylabel('On machines %')
-plt.xlabel('# Day')
-#marker = itertools.cycle((',', '+', '.', 'o', '*'))
-#color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
+plt.ylabel('Job energy consumption (kWh)')
+plt.xlabel('# Epoch')
+
+marker = itertools.cycle((',', '+', '.', 'o', '*'))
+color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
 #linestyle = itertools.cycle((':', '-.', '--', '-'))
-color = itertools.cycle('k')
 linestyle = itertools.cycle('--')
-for key, value in policies_multi_on_machines.iteritems():
+for key, value in policies_multi_epochs.iteritems():
     #ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
     plt.plot(value, linestyle=linestyle.next(), color='k', linewidth=2, label=policies_dict_name_legend.get(key))
-
-plt.xticks([0, ceil(((runtime/tickfrequency)/numberDays)*1.0), (((runtime/tickfrequency)/numberDays)*2.0), ceil(((runtime/tickfrequency)/numberDays)*3.0), ceil(((runtime/tickfrequency)/numberDays)*4.0), ceil(((runtime/tickfrequency)/numberDays)*5.0), ceil(((runtime/tickfrequency)/numberDays)*6.0), ceil(((runtime/tickfrequency)/numberDays)*7.0)], ['0', '1', '2', '3', '4', '5', '6', '7'])
-plt.ylim([0.28, 0.61])
 #plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-          #ncol=7, mode="expand", borderaxespad=0.)
+#          ncol=7, mode="expand", borderaxespad=0.)
 #plt.tight_layout()
 #plt.show()
-figure.savefig(os.path.join(input_dir,'monoliticsonevolutionmulti.pdf'), format='PDF')
+figure.savefig(os.path.join(input_dir,'monoliticfitnessevolutionmulti.pdf'), format='PDF')

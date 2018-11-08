@@ -7,27 +7,27 @@ import matplotlib.pyplot as plt
 import itertools
 
 
-def usage():
-    print "Usage: Input 1 Dir of protobuf Input 2 string of rows to perform"
-    sys.exit(1)
-
-logging.debug("len(sys.argv): " + str(len(sys.argv)))
-
-if len(sys.argv) < 2:
-    logging.error("Not enough arguments provided.")
-    usage()
-
-try:
-    input_dir = sys.argv[1]
-    rows_string = sys.argv[2]
-
-except:
-    usage()
+# def usage():
+#     print "Usage: Input 1 Dir of protobuf Input 2 string of rows to perform"
+#     sys.exit(1)
+#
+# logging.debug("len(sys.argv): " + str(len(sys.argv)))
+#
+# if len(sys.argv) < 2:
+#     logging.error("Not enough arguments provided.")
+#     usage()
+#
+# try:
+#     input_dir = sys.argv[1]
+#     rows_string = sys.argv[2]
+#
+# except:
+#     usage()
 
 #Este input dir lo sacare del argumento del sh
-#input_dir = "/Users/dfernandez/IdeaProjects/efficiency-cluster-scheduler-simulator/experiment_results/2016-08-26-18-13-58-vary_CL-exampleCMB_PBB_prefilled-604800"
+input_dir = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/experiment_results/2017-07-28-02-36-27-vary_CL-exampleCMB_PBB_prefilled-604800"
 #Estas filas tambien puedo sacarlas del sh, separadas por coma quiza, y el nombre del eje X va separado por ;
-#rows_string="always-power-off-decision;A"
+rows_string="always-power-off-decision;A,random-power-off-decision;R,gamma-off;G"
 policies = rows_string.split(",")
 policies_dict_name_legend = {}
 policies_single_on_machines = {}
@@ -114,7 +114,7 @@ for key, value in policies_single_on_machines.iteritems():
 
 #plt.rc('legend',**{'fontsize':16})
 #ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
-ax1.set_ylim([0.60, 0.75])
+ax1.set_ylim([0.25, 0.45])
 ax1.legend()
 plt.tight_layout()
 #plt.show()
@@ -148,7 +148,7 @@ for key, value in policies_multi_on_machines.iteritems():
 
 #plt.rc('legend',**{'fontsize':16})
 #ax1.legend((savingsSingleBar[0], savingsMultiBar[0]), ("Single", "Multi"))
-ax2.set_ylim([0.60, 0.75])
+ax2.set_ylim([0.28, 0.5])
 ax2.legend()
 plt.tight_layout()
 #plt.show()
