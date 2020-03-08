@@ -8,22 +8,27 @@ import itertools
 from math import *
 
 
-def usage():
-    print "Usage: Input 1 Dir of protobuf Input 2 string of rows to perform"
-    sys.exit(1)
+# def usage():
+#     print "Usage: Input 1 Dir of protobuf Input 2 string of rows to perform"
+#     sys.exit(1)
+#
+# logging.debug("len(sys.argv): " + str(len(sys.argv)))
+#
+# if len(sys.argv) < 2:
+#     logging.error("Not enough arguments provided.")
+#     usage()
+#
+# try:
+#     input_dir = sys.argv[1]
+#     rows_string = sys.argv[2]
+#
+# except:
+#     usage()
 
-logging.debug("len(sys.argv): " + str(len(sys.argv)))
-
-if len(sys.argv) < 2:
-    logging.error("Not enough arguments provided.")
-    usage()
-
-try:
-    input_dir = sys.argv[1]
-    rows_string = sys.argv[2]
-
-except:
-    usage()
+#Este input dir lo sacare del argumento del sh
+input_dir = "/Users/damianfernandez/IdeaProjects/score/experiment_results/extreme/exp-all"
+#Estas filas tambien puedo sacarlas del sh, separadas por coma quiza, y el nombre del eje X va separado por ;
+rows_string="always-power-off-decision;A,free-capacity-min;M,random-power-off-decision;R,,gamma-off;G"
 policies = rows_string.split(",")
 policies_dict_name_legend = {}
 policies_single_savings = {}
