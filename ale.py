@@ -27,7 +27,8 @@ def uniqueish_color():
 #input_dirs = ("/Users/damianfernandez/IdeaProjects/score/experiment_results/joseA25IAdiscernerW03all",
 #              "/Users/damianfernandez/IdeaProjects/score/experiment_results/joseA25IAdiscernerW05all",
 #              "/Users/damianfernandez/IdeaProjects/score/experiment_results/joseA25IAdiscernerW07all")
-input_dirs = ("/Users/damianfernandez/IdeaProjects/score/experiment_results/IA80-120W05-MP30s",)
+#input_dirs = ("/Users/damianfernandez/IdeaProjects/score/experiment_results/joseA25IAdiscernerWdynamicall",)
+input_dirs = ("/Users/damianfernandez/IdeaProjects/score/experiment_results/boost-w05/A25IA80-120W05MP120",)
 input_protobuff_dynamic = ""
 input_protobuff_mesos = ""
 input_protobuff_omega = ""
@@ -58,7 +59,7 @@ for base_dir in input_dirs:
           % len(experiment_result_set_dynamic.experiment_env))
 
     # experiments_to_plot = [number for number in range(25)]
-    experiments_to_plot = [number for number in range(1)]
+    experiments_to_plot = [number for number in range(5)]
     for experiment in experiments_to_plot:
         envs_to_plot = (experiment * 3, experiment * 3 + 1, experiment * 3 + 2)
         input_dir = base_dir + "/_figuras/" + str(experiment) + "/"
@@ -66,6 +67,7 @@ for base_dir in input_dirs:
             inter_mean = []
             fully_mean = {'Dynamic': [], 'Mesos': [], 'Omega': []}
             first_mean = {'Dynamic': [], 'Mesos': [], 'Omega': []}
+            sched_mean = {'Dynamic': [], 'Mesos': [], 'Omega': []}
             rms = []
             colors = []
             env = experiment_result_set_dynamic.experiment_env[env_number]
@@ -74,6 +76,7 @@ for base_dir in input_dirs:
                     inter_mean.append(measurement.interMean)
                     fully_mean['Dynamic'].append(measurement.queuefullyBatch)
                     first_mean['Dynamic'].append(measurement.queuefirstBatch)
+                    sched_mean['Dynamic'].append(measurement.schedulingTimeBatch)
                     rms.append(measurement.strategy)
                 break
             env = experiment_result_set_mesos.experiment_env[env_number]
@@ -82,6 +85,7 @@ for base_dir in input_dirs:
                 for measurement in exp_result.measurements:
                     fully_mean['Mesos'].append(measurement.queuefullyBatch)
                     first_mean['Mesos'].append(measurement.queuefirstBatch)
+                    sched_mean['Mesos'].append(measurement.schedulingTimeBatch)
                 break
 
             env = experiment_result_set_omega.experiment_env[env_number]
@@ -90,6 +94,7 @@ for base_dir in input_dirs:
                 for measurement in exp_result.measurements:
                     fully_mean['Omega'].append(measurement.queuefullyBatch)
                     first_mean['Omega'].append(measurement.queuefirstBatch)
+                    sched_mean['Omega'].append(measurement.schedulingTimeBatch)
                 break
             days_to_plot = ((0, 15), (0, 4), (6, 10))
             y_lims = ((0, 800), (0, 400), (0, 200))
@@ -113,7 +118,7 @@ for base_dir in input_dirs:
                     ax1.set_xlabel('# Day')
                     # ax1.set_xticklabels(policies_dict_name_legend.values())
                     runtime = 86400.0 * 15
-                    tickfrequency = 30.0
+                    tickfrequency = 60.0
                     numberDays = 15.0
                     rangeDayStart = day_tuple[0]
                     rangeDayEnd = day_tuple[1]
@@ -222,5 +227,48 @@ for base_dir in input_dirs:
                     ax1.legend()
                     plt.tight_layout()
                     figure.savefig(os.path.join(input_dir + 'queue_first_evolution_comparison' + name_string + '.pdf'),
+                                   format='PDF')
+
+                    # schedulingTimeMeasurementComparisonDynamic
+
+                    # N = len(policies_dict_name_legend.keys())
+                    N = 1
+                    # figure = plt.figure(figsize=(1, 3), num=12)
+                    # figure.clf()
+                    plt.rcParams.update({'font.size': 35})
+                    # ind = np.arange(N)  # the x locations for the groups
+                    # width = 0.35
+                    # ax1 = figure.add_subplot(1, 1, 1, position = [0.1, 0.2, 0.75, 0.75])
+                    figure, ax1 = plt.subplots(figsize=(40, 10), num=12, clear=True)
+                    ax1.margins(0)
+                    ax1.set_ylabel('Scheduling time (s)')
+                    ax1.set_xlabel('# Day')
+                    # ax1.set_xticklabels(policies_dict_name_legend.values())
+                    dailyTicks = int(len(sched_mean['Mesos']) / numberDays)
+                    tickStart = int(rangeDayStart * dailyTicks)
+                    tickEnd = int(rangeDayEnd * dailyTicks)
+                    # print(tickStart, tickEnd)
+                    # for i in np.arange(tickStart, tickEnd):
+                    #     ax1.plot([x[i], x[i + 1]], [y[i], y[i + 1]], colors[i])
+                    marker = itertools.cycle((',', '+', '.', 'o', '*'))
+                    color = itertools.cycle(('b', 'g', 'r', 'y', 'p'))
+                    linestyle = itertools.cycle(('-.', '-', '--', '-'))
+                    for key, value in sched_mean.items():
+                        # ax1.plot(value,linestyle='--', marker='', markersize=10, color='#ff9626', linewidth=3)
+                        ax1.plot(value[tickStart:tickEnd], linestyle=next(linestyle), marker=next(marker), markersize=2,
+                                 linewidth=3, label=key)
+                    # ax1.plot(cpu_util, linestyle='-', linewidth=1)
+                    ax1.set_ylim([y_lim[0], y_lim[1]])
+                    numberDaysPeriod = rangeDayEnd - rangeDayStart
+                    xtickmin = plt.xticks()[0][0]
+                    xtickmax = plt.xticks()[0][-1]
+                    dailyTicks = int((xtickmax - xtickmin) / numberDaysPeriod)
+                    ticks = [ceil(dailyTicks * number) for number in range(0, numberDaysPeriod + 1)]
+                    plt.xticks(ticks, range(rangeDayStart, int(rangeDayEnd + 1)))
+                    # plt.yticks([0.05, 0.1, 0.15, 0.2, 0.25], ['50', '100', '150', '200', '250'])
+                    # plt.yticks([0.3, 0.4, 0.5], ['30', '40', '50'])
+                    ax1.legend()
+                    plt.tight_layout()
+                    figure.savefig(os.path.join(input_dir + 'scheduling_time_evolution_comparison' + name_string + '.pdf'),
                                    format='PDF')
 
